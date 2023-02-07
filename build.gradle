@@ -1,0 +1,35 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.8'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'io.elasticsearch.pratica'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.data:spring-data-elasticsearch:4.4.0'
+    compileOnly 'org.projectlombok:lombok'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23'
+    runtimeOnly 'org.postgresql:postgresql' // 추가
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.4'
+}
+
+test {
+    useJUnitPlatform()
+}
