@@ -1,5 +1,6 @@
-package io.elasticsearch.pratica.crsseq.model.repository.elasticsearch;
+package io.elasticsearch.pratica.common.repository.elasticsearch;
 
+import org.elasticsearch.xcontent.XContentBuilder;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,6 @@ public interface BaseElasticSearchRepository<T> {
     boolean setAlias(IndexCoordinates indexNameWrapper, IndexCoordinates aliasNameWrapper);
     Set<String> findIndexNamesByAlias(IndexCoordinates aliasNameWrapper);
     boolean deleteIndex(IndexCoordinates indexNameWrapper);
-
+    public XContentBuilder getMappingBuilder() throws Exception;
+    public XContentBuilder getSettingsBuilder() throws Exception;
 }

@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "title": {
+      "type": "text",
+      "analyzer": "my_analyzer"
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "my_analyzer"
+    }
+  }
+}

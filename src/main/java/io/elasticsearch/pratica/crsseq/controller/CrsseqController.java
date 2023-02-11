@@ -1,8 +1,12 @@
 package io.elasticsearch.pratica.crsseq.controller;
 
+import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.service.impl.CrsseqServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -13,12 +17,20 @@ public class CrsseqController {
     @GetMapping(value = "/loginOut")
     public String loginOut() {
         try {
-            crsseqService.indexingCrsseqDate();
+            crsseqService.rolloverCrsseqDoc();
         } catch (Exception e) {
 
         }
         return "loginOut";
     }
+
+    @PostMapping("/crsseq")
+    public ResponseEntity createCrsseq(@RequestBody CrsseqDTO crsseqDTO) throws Exception {
+        crsseqService.saveCrsseq(crsseqDTO);
+        return  null;
+    }
+
+
 
 //
 //    @PostMapping("/chat/room")
