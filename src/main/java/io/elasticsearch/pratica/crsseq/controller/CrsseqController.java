@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class CrsseqController {
     private final CrsseqServiceImpl crsseqService;
 
-    @GetMapping(value = "/loginOut")
+    @GetMapping(value = "/rollingCrsseqIndex")
     public String loginOut() {
         try {
-            crsseqService.rolloverCrsseqDoc();
+            crsseqService.rollingCrsseqIndex();
         } catch (Exception e) {
 
         }

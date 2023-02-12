@@ -28,5 +28,5 @@ public class CrsseqDocument {
         @Field(type = FieldType.Text)
         private String title;
         @Field(type = FieldType.Text)
-        private String content;
+        private String tags;
 }

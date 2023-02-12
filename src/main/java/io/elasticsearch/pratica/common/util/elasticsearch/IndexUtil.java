@@ -1,14 +1,11 @@
 package io.elasticsearch.pratica.common.util.elasticsearch;
 
-import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.xcontent.XContentBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Component;
 

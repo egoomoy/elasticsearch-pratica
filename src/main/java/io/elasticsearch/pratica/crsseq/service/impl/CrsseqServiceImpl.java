@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CrsseqServiceImpl implements CrsseqService {
 
-    private static final String INDEX_PREFIX_NAME ="test";
-    private static final String ALIAS_NAME = "test";
+    private static final String INDEX_PREFIX_NAME ="el_crsseq";
+    private static final String ALIAS_NAME = "el_crsseq";
 
     private final CrsseqRespository crsseqRespository;
     private final CrsseqDocumentRepository crsseqDocumentRepository;
@@ -32,11 +32,12 @@ public class CrsseqServiceImpl implements CrsseqService {
 
     @Override
     @Transactional
-    public void rolloverCrsseqDoc() throws Exception {
-        // 1. 인덱스 네임 생성
+    public void rollingCrsseqIndex() throws Exception {
+        // 1. 인덱스 생성
         String newIndexName = INDEX_PREFIX_NAME + "-" + Instant.now().toEpochMilli();
         indexUtil.createIndex(newIndexName,crsseqDocumentRepository.getSettingsBuilder(), crsseqDocumentRepository.getMappingBuilder());
 
+        // 1.1 인덱스
         IndexCoordinates indexNameWrapper = indexUtil.createIndexNameWrapper(newIndexName);
         IndexCoordinates aliasNameWrapper = indexUtil.createIndexNameWrapper(ALIAS_NAME);
 
@@ -55,8 +56,8 @@ public class CrsseqServiceImpl implements CrsseqService {
         crsseqDocumentRepository.saveAll(crsseqDocuments,indexNameWrapper);
 
         // 6. 2번에서 조회된 index를 일괄 삭제한다. 필요에 따라 해당기능만 발라서 배치처리
-//        existIndexNames.forEach(indexName -> crsseqDocumentRepository.deleteIndex(indexUtil.createIndexNameWrapper(indexName)));
-//
+        existIndexNames.forEach(indexName -> crsseqDocumentRepository.deleteIndex(indexUtil.createIndexNameWrapper(indexName)));
+
         // 7. 5번에서 저장된 데이터를 alias처리
         crsseqDocumentRepository.setAlias(indexNameWrapper, aliasNameWrapper);
     }
@@ -65,12 +66,15 @@ public class CrsseqServiceImpl implements CrsseqService {
     @Transactional
     public void saveCrsseq(CrsseqDTO crsseqDTO) throws Exception {
         // 1. JPA를 통한 업데이트 필요
+        // 1-1. API로 호출될 경우 별도 db로 저장하지 않아도 되는 점
         Crsseq crsseq = modelMapper.map(crsseqDTO,Crsseq.class);
         crsseqRespository.save(crsseq);
 
-//        // 2. el DOC에 추가
-//        CrsseqDocument crsseqDocument = modelMapper.map(crsseq, CrsseqDocument.class);
-//        IndexCoordinates aliasNameWrapper = IndexUtil.createIndexNameWrapper(ALIAS_NAME);
-//        crsseqDocumentRepository.save(crsseqDocument,aliasNameWrapper);
+        // 2. el DOC에 추가
+        // TODO: 인덱스 롤링일 때는 부분 색인을 진행하지 않도록 조치할 것 + JPA와 비즈니스가 같이 있는게 안정성 측면에서 문제되지 않나?
+        // 물론 MSA라고 가정하면 분리된 트랜잭션이라서 문제 없을 것 같다.
+        CrsseqDocument crsseqDocument = modelMapper.map(crsseq, CrsseqDocument.class);
+        IndexCoordinates aliasNameWrapper = indexUtil.createIndexNameWrapper(ALIAS_NAME);
+        crsseqDocumentRepository.save(crsseqDocument,aliasNameWrapper);
     }
 }

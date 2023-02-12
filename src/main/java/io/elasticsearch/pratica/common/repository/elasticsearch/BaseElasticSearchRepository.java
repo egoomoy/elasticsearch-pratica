@@ -13,6 +13,5 @@ public interface BaseElasticSearchRepository<T> {
     boolean setAlias(IndexCoordinates indexNameWrapper, IndexCoordinates aliasNameWrapper);
     Set<String> findIndexNamesByAlias(IndexCoordinates aliasNameWrapper);
     boolean deleteIndex(IndexCoordinates indexNameWrapper);
-    public XContentBuilder getMappingBuilder() throws Exception;
     public XContentBuilder getSettingsBuilder() throws Exception;
 }

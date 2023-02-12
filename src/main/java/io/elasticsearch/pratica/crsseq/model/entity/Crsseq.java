@@ -19,10 +19,10 @@ public class Crsseq {
     @Column
     private String title;
     @Column
-    private String content;
+    private String tags;
     @Builder
-    public Crsseq(String title, String content) {
+    public Crsseq(String title, String tags) {
         this.title = title;
-        this.content = content;
+        this.tags = tags;
     }
 }

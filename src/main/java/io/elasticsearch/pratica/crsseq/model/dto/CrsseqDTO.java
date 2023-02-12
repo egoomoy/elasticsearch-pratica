@@ -7,5 +7,5 @@ import lombok.Setter;
 public class CrsseqDTO {
     private Long id;
     private String title;
-    private String content;
+    private String tags;
 }

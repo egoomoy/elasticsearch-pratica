@@ -17,7 +17,7 @@ import java.util.Set;
 @Repository
 @RequiredArgsConstructor
 public class BaseElasticSearchRepositoryImpl<T> implements BaseElasticSearchRepository<T> {
-
+    // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.17/java-rest-high-create-index.html
     private final ElasticsearchOperations operations;
 
     @Override
@@ -68,6 +68,9 @@ public class BaseElasticSearchRepositoryImpl<T> implements BaseElasticSearchRepo
                 .value("VV")
                 .value("MAG")
                 .value("E")
+                .value("VX")
+                .value("XSV")
+                .value("XSN")
                 .endArray()
                 .endObject()
                 .endObject()
@@ -87,39 +90,12 @@ public class BaseElasticSearchRepositoryImpl<T> implements BaseElasticSearchRepo
                 .startObject("tokenizer")
                 .startObject("nori_user_dict")
                 .field("type", "nori_tokenizer")
-                .field("decompound_mode", "none") //원어민=> 원어 + 민으로 구성되는데, mixed는 둘 다 검색, none은 원어민만 아마도 합성어를 나누는 기준일 듯 네이버에서도 원어민은 원어민으로 만 검색됨
+                .field("decompound_mode", "mixed") //원어민=> 원어 + 민으로 구성되는데, mixed는 둘 다 검색, none은 원어민만 아마도 합성어를 나누는 기준일 듯 네이버에서도 원어민은 원어민으로 만 검색됨
                 .field("user_dictionary", "userdict_ko.txt")
                 .endObject()
                 .endObject()
                 .endObject()
                 .endObject();
-        return builder;
-    }
-
-    @Override
-    public XContentBuilder getMappingBuilder() throws Exception {
-        XContentBuilder builder = XContentFactory.jsonBuilder();
-        builder.startObject();
-        {
-            builder.startObject("properties");
-            {
-                builder.startObject("title");
-                {
-                    builder.field("type", "text");
-                    builder.field("analyzer", "my_analyzer");
-                }
-                builder.endObject();
-
-                builder.startObject("content");
-                {
-                    builder.field("type", "text");
-                    builder.field("analyzer", "my_analyzer");
-                }
-                builder.endObject();
-            }
-            builder.endObject();
-        }
-        builder.endObject();
         return builder;
     }
 }
