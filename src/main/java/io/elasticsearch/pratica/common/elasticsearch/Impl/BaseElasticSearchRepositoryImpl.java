@@ -1,9 +1,12 @@
-package io.elasticsearch.pratica.common.repository.elasticsearch.Impl;
+package io.elasticsearch.pratica.common.elasticsearch.Impl;
 
-import io.elasticsearch.pratica.common.repository.elasticsearch.BaseElasticSearchRepository;
+import io.elasticsearch.pratica.common.elasticsearch.BaseElasticSearchRepository;
 import lombok.RequiredArgsConstructor;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.xcontent.XContentBuilder;
-import org.elasticsearch.xcontent.XContentFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.index.AliasAction;
@@ -19,6 +22,7 @@ import java.util.Set;
 public class BaseElasticSearchRepositoryImpl<T> implements BaseElasticSearchRepository<T> {
     // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.17/java-rest-high-create-index.html
     private final ElasticsearchOperations operations;
+    private final RestHighLevelClient restHighLevelClient;
 
     @Override
     public <S extends T> S save(S entity, IndexCoordinates indexName) {
@@ -54,48 +58,13 @@ public class BaseElasticSearchRepositoryImpl<T> implements BaseElasticSearchRepo
     }
 
     @Override
-    public XContentBuilder getSettingsBuilder() throws Exception {
-        XContentBuilder builder = XContentFactory.jsonBuilder();
-        builder.startObject()
-                .field("number_of_shards", 1)
-                .field("number_of_replicas", 1)
-                .startObject("analysis")
-                .startObject("filter")
-                .startObject("my_pos_f")
-                .field("type", "nori_part_of_speech")
-                .startArray("stoptags")
-                .value("J")
-                .value("VV")
-                .value("MAG")
-                .value("E")
-                .value("VX")
-                .value("XSV")
-                .value("XSN")
-                .endArray()
-                .endObject()
-                .endObject()
-                .startObject("analyzer")
-                .startObject("korean")
-                .field("type", "nori")
-                .field("stopwords", "_korean_")
-                .endObject()
-                .startObject("my_analyzer")
-                .field("type", "custom")
-                .field("tokenizer", "nori_user_dict")
-                .startArray("filter")
-                .value("my_pos_f")
-                .endArray()
-                .endObject()
-                .endObject()
-                .startObject("tokenizer")
-                .startObject("nori_user_dict")
-                .field("type", "nori_tokenizer")
-                .field("decompound_mode", "mixed") //원어민=> 원어 + 민으로 구성되는데, mixed는 둘 다 검색, none은 원어민만 아마도 합성어를 나누는 기준일 듯 네이버에서도 원어민은 원어민으로 만 검색됨
-                .field("user_dictionary", "userdict_ko.txt")
-                .endObject()
-                .endObject()
-                .endObject()
-                .endObject();
-        return builder;
+    public boolean createIndex(String indexName, XContentBuilder settingsBuilder, XContentBuilder mappingBuilder) throws Exception {
+        boolean acknowledged = false;
+        CreateIndexRequest request = new CreateIndexRequest(indexName);
+        request.settings(settingsBuilder);
+        request.mapping(mappingBuilder);
+        CreateIndexResponse response = restHighLevelClient.indices().create(request, RequestOptions.DEFAULT);
+        response.isAcknowledged();
+        return acknowledged;
     }
 }

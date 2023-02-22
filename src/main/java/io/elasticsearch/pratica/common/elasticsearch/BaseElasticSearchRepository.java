@@ -4,6 +4,7 @@ import org.elasticsearch.xcontent.XContentBuilder;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
 import java.util.Set;
 
 @Repository
@@ -13,5 +14,5 @@ public interface BaseElasticSearchRepository<T> {
     boolean setAlias(IndexCoordinates indexNameWrapper, IndexCoordinates aliasNameWrapper);
     Set<String> findIndexNamesByAlias(IndexCoordinates aliasNameWrapper);
     boolean deleteIndex(IndexCoordinates indexNameWrapper);
-    public XContentBuilder getSettingsBuilder() throws Exception;
+    boolean createIndex(String indexName, XContentBuilder settingsBuilder, XContentBuilder mappingBuilder) throws Exception;
 }
