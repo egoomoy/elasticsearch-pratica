@@ -1,4 +1,4 @@
-package io.elasticsearch.pratica.common.repository.elasticsearch;
+package io.elasticsearch.pratica.common.elasticsearch;
 
 import org.elasticsearch.xcontent.XContentBuilder;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;

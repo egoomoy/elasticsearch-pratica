@@ -1,106 +1,62 @@
 package io.elasticsearch.pratica.crsseq.controller;
 
+import io.elasticsearch.pratica.crsseq.model.document.CrsseqDocument;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
-import io.elasticsearch.pratica.crsseq.service.impl.CrsseqServiceImpl;
+import io.elasticsearch.pratica.crsseq.model.entity.Crsseq;
+import io.elasticsearch.pratica.crsseq.service.CrsseqService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchPage;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Iterator;
+
 
 @RequiredArgsConstructor
 @RestController
 public class CrsseqController {
-    private final CrsseqServiceImpl crsseqService;
+    private final CrsseqService crsseqService;
 
     @GetMapping(value = "/rollingCrsseqIndex")
-    public String loginOut() {
-        try {
-            crsseqService.rollingCrsseqIndex();
-        } catch (Exception e) {
-
-        }
-        return "loginOut";
+    public String loginOut() throws Exception {
+        crsseqService.rollingCrsseqIndex();
+        return "rolling";
     }
 
     @PostMapping("/crsseq")
-    public ResponseEntity createCrsseq(@RequestBody CrsseqDTO crsseqDTO) throws Exception {
-        crsseqService.saveCrsseq(crsseqDTO);
-        return  null;
+    public ResponseEntity saveCrsseq(@RequestBody CrsseqDTO.Req reqCrsseq) throws Exception {
+        Crsseq crsseq = crsseqService.saveCrsseq(reqCrsseq);
+        CrsseqDTO.Res resCrsseq = CrsseqDTO.Res.builder()
+                .id(crsseq.getId())
+                .title(crsseq.getTitle())
+                .tags(crsseq.getTags()).build();
+        return new ResponseEntity(resCrsseq, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/crsseq")
+    public ResponseEntity getCrsseq(CrsseqDTO.SearchReq reqCrsseq) throws Exception {
+        SearchPage<CrsseqDocument> crsseqDocs = crsseqService.getCrsseq(reqCrsseq);
 
+        Iterator<SearchHit<CrsseqDocument>> iterator = crsseqDocs.iterator();
+        while (iterator.hasNext()) {
+            CrsseqDocument crsseqDocument = iterator.next().getContent();
+            System.out.println(crsseqDocument.getTitle());
+        }
 
-//
-//    @PostMapping("/chat/room")
-//    public ResponseMap createRoom(@RequestBody @Valid RoomDto.Request roomDtoReq) throws Exception {
-//        final RoomDto.Item rtnRoom = roomService.createRoom(roomDtoReq);
-//        RoomDto.Response response = RoomDto.Response.builder()
-//                .id(rtnRoom.getId())
-//                .roomUuid(rtnRoom.getRoomUuid())
-//                .roomNm(rtnRoom.getRoomNm())
-//                .isClosed(rtnRoom.getIsClosed())
-//                .createDate(rtnRoom.getCreateDate())
-//                .status(rtnRoom.getStatus())
+//        CrsseqDTO.pageRes rtnDocs = CrsseqDTO.pageRes.builder()
+//                .content(crsseqDocs.getSearchHits())
 //                .build();
-//        return new ResponseMap(200, "", response);
-//    }
-//
-//    @GetMapping("/mng/rooms")
-//    public ResponseMap getRooms() throws Exception {
-//        List<RoomDto.Item> roomList = roomService.selectRoomList();
-//        List<RoomDto.Response> responseRoomList = new ArrayList<RoomDto.Response>();
-//
-//        for (Item rtnRoom : roomList) {
-//            ResponseBuilder rb = RoomDto.Response.builder();
-//            rb.id(rtnRoom.getId());
-//            rb.roomUuid(rtnRoom.getRoomUuid());
-//            rb.roomNm(rtnRoom.getRoomNm());
-//            rb.isClosed(rtnRoom.getIsClosed());
-//            rb.createDate(rtnRoom.getCreateDate());
-//            rb.status(rtnRoom.getStatus());
-//            if (rtnRoom.getMessage().size() != 0) {
-//                rb.lastMessage(rtnRoom.getMessage().get(0).getMessage());
-//                rb.lastMessageDate(rtnRoom.getMessage().get(0).getModified_date());
-//            }
-//            responseRoomList.add(rb.build());
-////			}
-//        }
-//        return new ResponseMap(200, "", responseRoomList);
-//    }
-//
-//    @GetMapping("/mng/room/{roomUUID}")
-//    public ResponseMap getRoom(@PathVariable("roomUUID") String id) throws Exception {
-//        RoomDto.Item rtnRoom = roomService.findRoomByRoomUuid(UUID.fromString(id));
-//        RoomDto.Response response = RoomDto.Response.builder()
-//                .id(rtnRoom.getId())
-//                .roomUuid(rtnRoom.getRoomUuid())
-//                .roomNm(rtnRoom.getRoomNm())
-//                .isClosed(rtnRoom.getIsClosed())
-//                .createDate(rtnRoom.getCreateDate())
-//                .status(rtnRoom.getStatus())
-//                .build();
-//        return new ResponseMap(200, "", response);
-//    }
-//
-//    @PatchMapping("/mng/room")
-//    public ResponseMap updateRoom(@RequestBody @Valid RoomDto.Request roomDtoReq) throws Exception {
-//        final RoomDto.Item rtnRoom = roomService.updateRoom(roomDtoReq);
-//
-//        ResponseBuilder rb = RoomDto.Response.builder();
-//        rb.id(rtnRoom.getId());
-//        rb.roomUuid(rtnRoom.getRoomUuid());
-//        rb.roomNm(rtnRoom.getRoomNm());
-//        rb.isClosed(rtnRoom.getIsClosed());
-//        rb.createDate(rtnRoom.getCreateDate());
-//        rb.status(rtnRoom.getStatus());
-//        if (rtnRoom.getMessage().size() != 0) {
-//            rb.lastMessage(rtnRoom.getMessage().get(0).getMessage());
-//            rb.lastMessageDate(rtnRoom.getMessage().get(0).getModified_date());
-//        }
-//        RoomDto.Response response = rb.build();
-//        return new ResponseMap(200, "", response);
-//    }
 
+
+//        List<CrsseqDTO.Res> resCrsseqs = crsseqDocs.stream().map(crsseqDoc -> {
+//            CrsseqDTO.Res resCrsseq = CrsseqDTO.Res.builder()
+//                    .id(crsseqDoc.getId())
+//                    .title(crsseqDoc.getTitle())
+//                    .tags(crsseqDoc.getTags()).build();
+//            return resCrsseq;
+//        }).collect(Collectors.toList());
+        return new ResponseEntity(crsseqDocs, HttpStatus.OK);
+    }
 }

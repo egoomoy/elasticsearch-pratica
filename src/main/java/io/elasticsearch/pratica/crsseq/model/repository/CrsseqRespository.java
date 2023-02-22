@@ -1,4 +1,4 @@
-package io.elasticsearch.pratica.crsseq.model.repository.jpa;
+package io.elasticsearch.pratica.crsseq.model.repository;
 
 import io.elasticsearch.pratica.crsseq.model.entity.Crsseq;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -28,6 +28,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.4'
+    implementation 'co.elastic.clients:elasticsearch-java:7.17.9'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
 }
 
 test {

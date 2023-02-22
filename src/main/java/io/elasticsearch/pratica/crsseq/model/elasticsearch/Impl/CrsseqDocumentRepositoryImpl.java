@@ -1,4 +1,4 @@
-package io.elasticsearch.pratica.crsseq.model.repository.elasticsearch.Impl;
+package io.elasticsearch.pratica.crsseq.model.elasticsearch.Impl;
 
 import io.elasticsearch.pratica.crsseq.model.document.CrsseqDocument;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,11 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.SearchPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
+@Repository
 @RequiredArgsConstructor
 public class CrsseqDocumentRepositoryImpl {
     private final ElasticsearchOperations operations;

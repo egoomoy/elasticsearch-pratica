@@ -1,8 +1,8 @@
-package io.elasticsearch.pratica.crsseq.model.elasticsearch;
+package io.elasticsearch.pratica.crsseq.model.elasticsearch.qurey;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 
 public interface QueryBuilderInterface {
-    void createQuery(CrsseqDTO.Req req);
+    void createQuery(CrsseqDTO.SearchReq req);
     NativeSearchQuery getSearch();
 }
