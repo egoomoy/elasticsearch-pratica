@@ -1,7 +1,8 @@
-package io.elasticsearch.pratica.crsseq.model.elasticsearch.qurey;
+package io.elasticsearch.pratica.crsseq.elastic.builder;
 
+import io.elasticsearch.pratica.common.elastic.builder.QueryBuilderInterface;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
-import io.elasticsearch.pratica.crsseq.model.elasticsearch.filters.KeywordsFilter;
+import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsFilter;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
@@ -10,11 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 
 @Component
-public class QueryBuilder implements QueryBuilderInterface {
+public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.SearchReq> {
     private NativeSearchQueryBuilder searchQueryBuilder;
     private PageRequest pageRequest;
 
-    public QueryBuilder() {
+    public CrsseqQueryBuilder() {
         this.searchQueryBuilder = new NativeSearchQueryBuilder();
     }
     @Override

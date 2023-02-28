@@ -1,6 +1,6 @@
 package io.elasticsearch.pratica.crsseq.controller;
 
-import io.elasticsearch.pratica.crsseq.model.document.CrsseqDocument;
+import io.elasticsearch.pratica.crsseq.elastic.document.CrsseqDocument;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.model.entity.Crsseq;
 import io.elasticsearch.pratica.crsseq.service.CrsseqService;

@@ -1,10 +1,7 @@
-package io.elasticsearch.pratica.crsseq.model.elasticsearch.filters;
+package io.elasticsearch.pratica.crsseq.elastic.filters;
 
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import org.elasticsearch.index.query.*;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
 
 public class KeywordsFilter {
     public static AbstractQueryBuilder createFilter(CrsseqDTO.SearchReq req) {

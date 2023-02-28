@@ -1,12 +1,10 @@
 package io.elasticsearch.pratica.crsseq.service.impl;
 
-import io.elasticsearch.pratica.crsseq.model.document.CrsseqDocument;
+import io.elasticsearch.pratica.crsseq.elastic.document.CrsseqDocument;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.model.entity.Crsseq;
 import io.elasticsearch.pratica.crsseq.service.CrsseqService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchPage;
-import org.springframework.stereotype.Service;
 
 /*
 @Service 를 사용안하는 쪽에 지워주면 주입 변환 가능

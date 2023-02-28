@@ -1,10 +1,9 @@
-package io.elasticsearch.pratica.common.elasticsearch;
+package io.elasticsearch.pratica.common.elastic.repository;
 
 import org.elasticsearch.xcontent.XContentBuilder;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
 import java.util.Set;
 
 @Repository

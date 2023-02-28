@@ -1,14 +1,15 @@
 package io.elasticsearch.pratica.crsseq.service.impl;
 
-import io.elasticsearch.pratica.crsseq.model.document.CrsseqDocument;
+import io.elasticsearch.pratica.crsseq.elastic.builder.CrsseqIndexBuilder;
+import io.elasticsearch.pratica.crsseq.elastic.builder.CrsseqQueryBuilder;
+import io.elasticsearch.pratica.crsseq.elastic.document.CrsseqDocument;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.model.entity.Crsseq;
-import io.elasticsearch.pratica.crsseq.model.elasticsearch.CrsseqDocumentRepository;
+import io.elasticsearch.pratica.crsseq.elastic.repository.CrsseqDocumentRepository;
 import io.elasticsearch.pratica.crsseq.model.repository.CrsseqRespository;
 import io.elasticsearch.pratica.crsseq.service.CrsseqService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -18,7 +19,6 @@ import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import io.elasticsearch.pratica.crsseq.model.elasticsearch.qurey.QueryBuilder;
 
 import java.time.Instant;
 import java.util.*;
@@ -30,12 +30,13 @@ public class CrsseqServiceImpl implements CrsseqService {
     private static final String INDEX_PREFIX_NAME = "el_crsseq";
     private static final String ALIAS_NAME = "el_crsseq";
 
+    private final CrsseqIndexBuilder crsseqIndexBuilder;
     private final CrsseqRespository crsseqRespository;
     private final CrsseqDocumentRepository crsseqDocumentRepository;
     private final ModelMapper modelMapper;
 
     private final ElasticsearchOperations operations;
-    private final QueryBuilder queryBuilder;
+    private final CrsseqQueryBuilder crsseqQueryBuilder;
 
     @Override
     @Transactional
@@ -44,7 +45,7 @@ public class CrsseqServiceImpl implements CrsseqService {
 
         // 1. 인덱스 생성
         String newIndexName = INDEX_PREFIX_NAME + "-" + Instant.now().toEpochMilli();
-        crsseqDocumentRepository.createIndex(newIndexName, crsseqDocumentRepository.getSettingsBuilder(), crsseqDocumentRepository.getMappingBuilder());
+        crsseqDocumentRepository.createIndex(newIndexName, crsseqIndexBuilder.getSettingsBuilder(), crsseqIndexBuilder.getMappingBuilder());
         // 1.1 인덱스 래핑
         IndexCoordinates indexNameWrapper = IndexCoordinates.of(newIndexName);
         IndexCoordinates aliasNameWrapper = IndexCoordinates.of(ALIAS_NAME);
@@ -105,10 +106,10 @@ public class CrsseqServiceImpl implements CrsseqService {
     @Override
     @Transactional
     public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.SearchReq reqCrsseq) throws Exception {
-        queryBuilder.createQuery(reqCrsseq);
-        NativeSearchQuery searchQuery = queryBuilder.getSearch();
+        crsseqQueryBuilder.createQuery(reqCrsseq);
+        NativeSearchQuery searchQuery = crsseqQueryBuilder.getSearch();
         SearchHits<CrsseqDocument>  searchHits = operations.search(searchQuery,CrsseqDocument.class);
-        SearchPage<CrsseqDocument>  searchPage = SearchHitSupport.searchPageFor(searchHits,queryBuilder.getPageRequest());
+        SearchPage<CrsseqDocument>  searchPage = SearchHitSupport.searchPageFor(searchHits,crsseqQueryBuilder.getPageRequest());
 
 
 //        Map<String,Object> query = new HashMap<>();

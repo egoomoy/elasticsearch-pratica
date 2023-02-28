@@ -1,6 +1,6 @@
-package io.elasticsearch.pratica.common.elasticsearch.Impl;
+package io.elasticsearch.pratica.common.elastic.repository.Impl;
 
-import io.elasticsearch.pratica.common.elasticsearch.BaseElasticSearchRepository;
+import io.elasticsearch.pratica.common.elastic.repository.BaseElasticSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
