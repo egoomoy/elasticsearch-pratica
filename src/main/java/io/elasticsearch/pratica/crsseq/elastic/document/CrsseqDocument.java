@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/io/elasticsearch/pratica/crsseq/elastic/document/CrsseqDocument.java
 package io.elasticsearch.pratica.crsseq.elastic.document;
-========
-package io.elasticsearch.pratica.crsseq.elasticsearch.document;
->>>>>>>> 7d9e2d911fae614c3db5ba2cc30f15f6a8bdc458:src/main/java/io/elasticsearch/pratica/crsseq/elasticsearch/document/CrsseqDocument.java
 
 import lombok.Getter;
 import lombok.Setter;
