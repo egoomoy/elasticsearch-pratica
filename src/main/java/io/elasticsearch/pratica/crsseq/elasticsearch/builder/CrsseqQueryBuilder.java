@@ -1,22 +1,24 @@
-package io.elasticsearch.pratica.crsseq.model.elasticsearch.qurey;
+package io.elasticsearch.pratica.crsseq.elasticsearch.builder;
 
+import io.elasticsearch.pratica.common.elasticsearch.qurey.QueryBuilderInterface;
+import io.elasticsearch.pratica.crsseq.elasticsearch.filters.KeywordsFilter;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
-import io.elasticsearch.pratica.crsseq.model.elasticsearch.filters.KeywordsFilter;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.stereotype.Component;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.stereotype.Component;
 
 @Component
-public class QueryBuilder implements QueryBuilderInterface {
+public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.SearchReq> {
     private NativeSearchQueryBuilder searchQueryBuilder;
     private PageRequest pageRequest;
 
-    public QueryBuilder() {
+    public CrsseqQueryBuilder() {
         this.searchQueryBuilder = new NativeSearchQueryBuilder();
     }
+
     @Override
     public void createQuery(CrsseqDTO.SearchReq req) {
         this.setPageOffset(req);
@@ -24,6 +26,11 @@ public class QueryBuilder implements QueryBuilderInterface {
         this.setAggregation(req);
         this.setSorting(req);
         this.setFields(req);
+    }
+
+    @Override
+    public NativeSearchQuery getSearch() {
+        return this.searchQueryBuilder.build();
     }
 
     private void setFields(CrsseqDTO.SearchReq req) {
@@ -46,11 +53,6 @@ public class QueryBuilder implements QueryBuilderInterface {
     private void setPageOffset(CrsseqDTO.SearchReq req) {
         this.pageRequest = PageRequest.of(req.getPageNumber(), req.getPageSize());
         this.searchQueryBuilder.withPageable(this.pageRequest);
-    }
-
-    @Override
-    public NativeSearchQuery getSearch() {
-        return this.searchQueryBuilder.build();
     }
 
     public PageRequest getPageRequest() {

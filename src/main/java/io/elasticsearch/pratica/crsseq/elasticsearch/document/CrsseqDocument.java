@@ -1,4 +1,4 @@
-package io.elasticsearch.pratica.crsseq.model.document;
+package io.elasticsearch.pratica.crsseq.elasticsearch.document;
 
 import lombok.Getter;
 import lombok.Setter;

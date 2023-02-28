@@ -1,6 +1,6 @@
 package io.elasticsearch.pratica.common.elasticsearch.Impl;
 
-import io.elasticsearch.pratica.common.elasticsearch.BaseElasticSearchRepository;
+import io.elasticsearch.pratica.common.elasticsearch.repository.CustomElasticsearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
-public class BaseElasticSearchRepositoryImpl<T> implements BaseElasticSearchRepository<T> {
+public class BaseElasticSearchRepositoryImpl<T> implements CustomElasticsearchRepository<T> {
     // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.17/java-rest-high-create-index.html
     private final ElasticsearchOperations operations;
     private final RestHighLevelClient restHighLevelClient;
