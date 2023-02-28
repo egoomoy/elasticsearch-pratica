@@ -14,16 +14,14 @@ import org.springframework.data.elasticsearch.core.SearchHitSupport;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.SearchPage;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import io.elasticsearch.pratica.crsseq.model.elasticsearch.qurey.QueryBuilder;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,12 +56,23 @@ public class CrsseqServiceImpl implements CrsseqService {
         List<Crsseq> crsseqList = crsseqRespository.findAll();
 
         // 4. Entity => Document로 변환한다.
-        List<CrsseqDocument> crsseqDocuments = crsseqList.stream()
-                .map(seq -> modelMapper.map(seq, CrsseqDocument.class))
-                .collect(Collectors.toList());
-
+//        List<CrsseqDocument> crsseqDocuments = crsseqList.stream()
+//                .map(seq -> modelMapper.map(seq, CrsseqDocument.class))
+//                .collect(Collectors.toList());
         // 5. Document 저장 (3/4번에서 조회->변환된 데이터)
-        crsseqDocumentRepository.saveAll(crsseqDocuments, indexNameWrapper);
+//        crsseqDocumentRepository.saveAll(crsseqDocuments, indexNameWrapper);
+
+        // 4/5 recode bulk index
+        List<IndexQuery> indexQueries = crsseqList.stream()
+                .map(seq -> {
+                    CrsseqDocument crsseqDocument = modelMapper.map(seq, CrsseqDocument.class);
+                    IndexQuery indexQuery = new IndexQuery();
+                    indexQuery.setObject(crsseqDocument);
+                    return indexQuery;
+                })
+                .collect(Collectors.toList());
+        crsseqList.stream().map(seq -> modelMapper.map(seq, CrsseqDocument.class));
+        operations.bulkIndex(indexQueries, indexNameWrapper);
 
         // 6. 2번에서 조회된 index를 일괄 삭제한다. 필요에 따라 해당기능만 발라서 배치처리
         existIndexNames.forEach(indexName -> crsseqDocumentRepository.deleteIndex(IndexCoordinates.of(indexName)));
