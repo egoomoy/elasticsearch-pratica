@@ -1,16 +1,8 @@
-<<<<<<<< HEAD:src/main/java/io/elasticsearch/pratica/crsseq/elastic/builder/CrsseqQueryBuilder.java
 package io.elasticsearch.pratica.crsseq.elastic.builder;
 
 import io.elasticsearch.pratica.common.elastic.builder.QueryBuilderInterface;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsFilter;
-========
-package io.elasticsearch.pratica.crsseq.elasticsearch.builder;
-
-import io.elasticsearch.pratica.common.elasticsearch.qurey.QueryBuilderInterface;
-import io.elasticsearch.pratica.crsseq.elasticsearch.filters.KeywordsFilter;
-import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
->>>>>>>> 7d9e2d911fae614c3db5ba2cc30f15f6a8bdc458:src/main/java/io/elasticsearch/pratica/crsseq/elasticsearch/builder/CrsseqQueryBuilder.java
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
