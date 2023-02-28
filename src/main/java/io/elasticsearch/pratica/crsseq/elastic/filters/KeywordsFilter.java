@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:src/main/java/io/elasticsearch/pratica/crsseq/elastic/filters/KeywordsFilter.java
 package io.elasticsearch.pratica.crsseq.elastic.filters;
+========
+package io.elasticsearch.pratica.crsseq.elasticsearch.filters;
+>>>>>>>> 7d9e2d911fae614c3db5ba2cc30f15f6a8bdc458:src/main/java/io/elasticsearch/pratica/crsseq/elasticsearch/filters/KeywordsFilter.java
 
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import org.elasticsearch.index.query.*;

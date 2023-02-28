@@ -5,7 +5,7 @@ import io.elasticsearch.pratica.crsseq.elastic.builder.CrsseqQueryBuilder;
 import io.elasticsearch.pratica.crsseq.elastic.document.CrsseqDocument;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.model.entity.Crsseq;
-import io.elasticsearch.pratica.crsseq.elastic.repository.CrsseqDocumentRepository;
+import io.elasticsearch.pratica.crsseq.elastic.repository.CrsseqElasticsearchRepository;
 import io.elasticsearch.pratica.crsseq.model.repository.CrsseqRespository;
 import io.elasticsearch.pratica.crsseq.service.CrsseqService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,11 +33,10 @@ public class CrsseqServiceImpl implements CrsseqService {
 
     private final CrsseqIndexBuilder crsseqIndexBuilder;
     private final CrsseqRespository crsseqRespository;
-    private final CrsseqDocumentRepository crsseqDocumentRepository;
+    private final CrsseqElasticsearchRepository crsseqElasticsearchRepository;
     private final ModelMapper modelMapper;
-
-    private final ElasticsearchOperations operations;
     private final CrsseqQueryBuilder crsseqQueryBuilder;
+    private final ElasticsearchOperations operations;
 
     @Override
     @Transactional
@@ -45,13 +45,13 @@ public class CrsseqServiceImpl implements CrsseqService {
 
         // 1. 인덱스 생성
         String newIndexName = INDEX_PREFIX_NAME + "-" + Instant.now().toEpochMilli();
-        crsseqDocumentRepository.createIndex(newIndexName, crsseqIndexBuilder.getSettingsBuilder(), crsseqIndexBuilder.getMappingBuilder());
+        crsseqElasticsearchRepository.createIndex(newIndexName, crsseqIndexBuilder.getSettingsBuilder(), crsseqIndexBuilder.getMappingBuilder());
         // 1.1 인덱스 래핑
         IndexCoordinates indexNameWrapper = IndexCoordinates.of(newIndexName);
         IndexCoordinates aliasNameWrapper = IndexCoordinates.of(ALIAS_NAME);
 
         // 2. alias 됐던 인덱스 전부를 찾는다.
-        Set<String> existIndexNames = crsseqDocumentRepository.findIndexNamesByAlias(aliasNameWrapper);
+        Set<String> existIndexNames = crsseqElasticsearchRepository.findIndexNamesByAlias(aliasNameWrapper);
 
         // 3. JPA를 통해 필요 데이터를 조회한다.
         List<Crsseq> crsseqList = crsseqRespository.findAll();
@@ -76,10 +76,10 @@ public class CrsseqServiceImpl implements CrsseqService {
         operations.bulkIndex(indexQueries, indexNameWrapper);
 
         // 6. 2번에서 조회된 index를 일괄 삭제한다. 필요에 따라 해당기능만 발라서 배치처리
-        existIndexNames.forEach(indexName -> crsseqDocumentRepository.deleteIndex(IndexCoordinates.of(indexName)));
+        existIndexNames.forEach(indexName -> crsseqElasticsearchRepository.deleteIndex(IndexCoordinates.of(indexName)));
 
         // 7. 5번에서 저장된 데이터를 alias처리
-        rtn = crsseqDocumentRepository.setAlias(indexNameWrapper, aliasNameWrapper);
+        rtn = crsseqElasticsearchRepository.setAlias(indexNameWrapper, aliasNameWrapper);
 
         return rtn;
     }
@@ -97,8 +97,7 @@ public class CrsseqServiceImpl implements CrsseqService {
         // 물론 MSA라고 가정하면 분리된 트랜잭션이라서 문제 없을 것 같다.
         CrsseqDocument crsseqDocument = modelMapper.map(reqCrsseq, CrsseqDocument.class);
         IndexCoordinates aliasNameWrapper = IndexCoordinates.of(ALIAS_NAME);
-        CrsseqDocument resDoc = crsseqDocumentRepository.save(crsseqDocument, aliasNameWrapper);
-
+        crsseqElasticsearchRepository.save(crsseqDocument, aliasNameWrapper);
 
         return crsseq;
     }
@@ -110,11 +109,6 @@ public class CrsseqServiceImpl implements CrsseqService {
         NativeSearchQuery searchQuery = crsseqQueryBuilder.getSearch();
         SearchHits<CrsseqDocument>  searchHits = operations.search(searchQuery,CrsseqDocument.class);
         SearchPage<CrsseqDocument>  searchPage = SearchHitSupport.searchPageFor(searchHits,crsseqQueryBuilder.getPageRequest());
-
-
-//        Map<String,Object> query = new HashMap<>();
-//        query.put(CrsseqDTO.Req.Fields.keywords,reqCrsseq.getKeywords());
-//        SearchPage<CrsseqDocument> resDocs = crsseqDocumentRepository.termAndMatchFind(ALIAS_NAME, query, pageable);
 
         return searchPage;
     }
