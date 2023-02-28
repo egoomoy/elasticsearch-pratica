@@ -56,14 +56,15 @@ public class CrsseqServiceImpl implements CrsseqService {
         // 3. JPA를 통해 필요 데이터를 조회한다.
         List<Crsseq> crsseqList = crsseqRespository.findAll();
 
-        // 4. Entity => Document로 변환한다.
+//        // 4. Entity => Document로 변환한다.
 //        List<CrsseqDocument> crsseqDocuments = crsseqList.stream()
 //                .map(seq -> modelMapper.map(seq, CrsseqDocument.class))
 //                .collect(Collectors.toList());
-        // 5. Document 저장 (3/4번에서 조회->변환된 데이터)
-//        crsseqDocumentRepository.saveAll(crsseqDocuments, indexNameWrapper);
+//        // 5. Document 저장 (3/4번에서 조회->변환된 데이터)
+//        crsseqElasticsearchRepository.saveAll(crsseqDocuments, indexNameWrapper);
 
-        // 4/5 recode bulk index
+        // 4/5 recode bulk index 4,5 도 동일하게 벌크로 넘겨주는 것은 가능하나, saveAll을 저렇게 수정하지 않으면 안되네
+        // save를 까보면 결국 doc 이름을 Coordinate하게되는데, 수정없이 사용하면 alias처리가 안됨
         List<IndexQuery> indexQueries = crsseqList.stream()
                 .map(seq -> {
                     CrsseqDocument crsseqDocument = modelMapper.map(seq, CrsseqDocument.class);

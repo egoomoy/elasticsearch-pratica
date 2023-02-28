@@ -1,6 +1,7 @@
 package io.elasticsearch.pratica.crsseq.elastic.builder;
 
 import io.elasticsearch.pratica.common.elastic.builder.QueryBuilderInterface;
+import io.elasticsearch.pratica.crsseq.elastic.filters.EduTypeFilter;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
 import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsFilter;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -46,6 +47,9 @@ public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Searc
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (!req.getKeywords().isEmpty()) {
             boolQueryBuilder.should(KeywordsFilter.createFilter(req));
+        }
+        if (!req.getEduType().isEmpty()) {
+            boolQueryBuilder.must(EduTypeFilter.createFilter(req));
         }
         this.searchQueryBuilder.withQuery(boolQueryBuilder);
     }

@@ -20,4 +20,6 @@ public class CrsseqDocument {
     private String title;
     @Field(type = FieldType.Text)
     private String tags;
+    @Field(type = FieldType.Text)
+    private String eduType;
 }

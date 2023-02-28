@@ -14,6 +14,7 @@ public class CrsseqDTO {
         private Long id;
         private String title;
         private String tags;
+        private String eduType;
     }
 
     @Getter
@@ -23,6 +24,7 @@ public class CrsseqDTO {
         private String title;
         private String tags;
         private String keywords;
+        private String eduType;
     }
 
     @Getter
@@ -32,17 +34,8 @@ public class CrsseqDTO {
         private Long id;
         private String title;
         private String tags;
+        private String eduType;
     }
-
-//    @Getter
-//    @Builder
-//    public static class pageRes {
-//        private List<Res> content;
-//        private long totalElements;
-//        private int totalPages;
-//        private int pageNumber;
-//        private int pageSize;
-//    }
 
     @Getter
     @FieldNameConstants
@@ -50,6 +43,7 @@ public class CrsseqDTO {
     public static class SearchReq {
         private String type;
         private String keywords;
+        private String eduType;
         private Integer pageNumber = 1;
         private Integer pageSize = 5;
     }
