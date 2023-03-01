@@ -2,8 +2,9 @@ package io.elasticsearch.pratica.crsseq.elastic.builder;
 
 import io.elasticsearch.pratica.common.elastic.builder.QueryBuilderInterface;
 import io.elasticsearch.pratica.crsseq.elastic.filters.EduTypeFilter;
+import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsTermFilter;
 import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
-import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsFilter;
+import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsMatchFilter;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
@@ -46,10 +47,11 @@ public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Searc
     private void setFilters(CrsseqDTO.SearchReq req) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (!req.getKeywords().isEmpty()) {
-            boolQueryBuilder.should(KeywordsFilter.createFilter(req));
+            boolQueryBuilder.should(KeywordsMatchFilter.createFilter(req));
+            boolQueryBuilder.should(KeywordsTermFilter.createFilter(req));
         }
         if (!req.getEduType().isEmpty()) {
-            boolQueryBuilder.must(EduTypeFilter.createFilter(req));
+            boolQueryBuilder.filter(EduTypeFilter.createFilter(req));
         }
         this.searchQueryBuilder.withQuery(boolQueryBuilder);
     }
