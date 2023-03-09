@@ -17,6 +17,13 @@ public class CrsseqIndexBuilder {
                     builder.field("type", "text");
                     builder.field("analyzer", "my_analyzer");
                     builder.field("copy_to", "keywords");
+                    // 정확한 데이터를 검색하고 저장하기 위해서는 keyword 타입으로?
+//                    builder.startObject("fields");
+//                    builder.startObject("fulltext"); // 하위 필드이기 때문에 마음대로 지정 가능
+//                    builder.field("type", "keyword");
+//                    builder.field("ignore_Above", "200");
+//                    builder.endObject();
+//                    builder.endObject();
                 }
                 builder.endObject();
 
@@ -34,6 +41,21 @@ public class CrsseqIndexBuilder {
                     builder.field("analyzer", "my_analyzer");
                 }
                 builder.endObject();
+
+                builder.startObject("crsregStrtdt");
+                {
+                    builder.field("type", "date");
+                    builder.field("format", "yyyy-MM-dd HH:mm:ss");
+                }
+                builder.endObject();
+
+                builder.startObject("crsregEnddt");
+                {
+                    builder.field("type", "date");
+                    builder.field("format", "yyyy-MM-dd HH:mm:ss");
+                }
+                builder.endObject();
+
             }
             builder.endObject();
         }

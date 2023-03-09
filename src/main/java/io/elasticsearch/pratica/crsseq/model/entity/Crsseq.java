@@ -5,11 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
-@Entity(name="TB_CRSSEQ")
+@Entity(name = "TB_CRSSEQ")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Crsseq {
     @Id
@@ -22,11 +26,19 @@ public class Crsseq {
     private String tags;
     @Column
     private String eduType;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    private Date crsregStrtdt;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    private Date crsregEnddt;
 
     @Builder
-    public Crsseq(String title, String tags, String eduType) {
+    public Crsseq(String title, String tags, String eduType, Date crsregStrtdt, Date crsregEnddt) {
         this.title = title;
         this.tags = tags;
         this.eduType = eduType;
+        this.crsregStrtdt = crsregStrtdt;
+        this.crsregEnddt = crsregEnddt;
     }
 }
