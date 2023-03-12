@@ -1,10 +1,10 @@
-package io.elasticsearch.pratica.crsseq.elastic.builder;
+package io.elasticsearch.pratica.content.elastic.builder;
 
 import io.elasticsearch.pratica.common.elastic.builder.QueryBuilderInterface;
-import io.elasticsearch.pratica.crsseq.elastic.filters.EduTypeFilter;
-import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsTermFilter;
-import io.elasticsearch.pratica.crsseq.model.dto.CrsseqDTO;
-import io.elasticsearch.pratica.crsseq.elastic.filters.KeywordsMatchFilter;
+import io.elasticsearch.pratica.content.elastic.filters.EduTypeFilter;
+import io.elasticsearch.pratica.content.elastic.filters.KeywordsTermFilter;
+import io.elasticsearch.pratica.content.model.dto.ContentDTO;
+import io.elasticsearch.pratica.content.elastic.filters.KeywordsMatchFilter;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.PageRequest;
@@ -13,16 +13,16 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Component;
 
 @Component
-public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Req> {
+public class ContentQueryBuilder implements QueryBuilderInterface<ContentDTO.Req> {
     private NativeSearchQueryBuilder searchQueryBuilder;
     private PageRequest pageRequest;
 
-    public CrsseqQueryBuilder() {
+    public ContentQueryBuilder() {
         this.searchQueryBuilder = new NativeSearchQueryBuilder();
     }
 
     @Override
-    public void createQuery(CrsseqDTO.Req req) {
+    public void createQuery(ContentDTO.Req req) {
         this.setPageOffset(req);
         this.setFilters(req);
         this.setAggregation(req);
@@ -35,16 +35,16 @@ public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Req> 
         return this.searchQueryBuilder.build();
     }
 
-    private void setFields(CrsseqDTO.Req req) {
+    private void setFields(ContentDTO.Req req) {
     }
 
-    private void setSorting(CrsseqDTO.Req req) {
+    private void setSorting(ContentDTO.Req req) {
     }
 
-    private void setAggregation(CrsseqDTO.Req req) {
+    private void setAggregation(ContentDTO.Req req) {
     }
 
-    private void setFilters(CrsseqDTO.Req req) {
+    private void setFilters(ContentDTO.Req req) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (req.getKeywords() != null && !req.getKeywords().isEmpty()) {
             boolQueryBuilder.should(KeywordsMatchFilter.createFilter(req));
@@ -56,7 +56,7 @@ public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Req> 
         this.searchQueryBuilder.withQuery(boolQueryBuilder);
     }
 
-    private void setPageOffset(CrsseqDTO.Req req) {
+    private void setPageOffset(ContentDTO.Req req) {
         this.pageRequest = PageRequest.of(req.getPageNumber(), req.getPageSize());
         this.searchQueryBuilder.withPageable(this.pageRequest);
     }

@@ -1,25 +1,20 @@
-package io.elasticsearch.pratica.crsseq.model.entity;
+package io.elasticsearch.pratica.content.model.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
-@Entity(name = "TB_CRSSEQ")
+@Entity(name = "tb_content")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Crsseq {
+public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "crsseq_id")
+    @Column(name = "content_id")
     private Long id;
     @Column
     private String title;
@@ -33,7 +28,7 @@ public class Crsseq {
     private LocalDateTime crsregEnddt;
 
     @Builder
-    public Crsseq(String title, String tags, String eduType, LocalDateTime crsregStrtdt, LocalDateTime crsregEnddt) {
+    public Content(String title, String tags, String eduType, LocalDateTime crsregStrtdt, LocalDateTime crsregEnddt) {
         this.title = title;
         this.tags = tags;
         this.eduType = eduType;

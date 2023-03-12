@@ -11,8 +11,8 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.context.annotation.ComponentScan;
 
-@EnableElasticsearchRepositories(basePackages={"com.example.elasticsearch.crsseq.model.repository"})
-@ComponentScan(basePackages = { "com.example.elasticsearch.crsseq.service" })
+@EnableElasticsearchRepositories(basePackages={"com.example.elasticsearch.content.model.repository"})
+@ComponentScan(basePackages = { "com.example.elasticsearch.content.service" })
 @Configuration
 public class ElasticSearchConfig {
     @Bean

@@ -1,4 +1,4 @@
-package io.elasticsearch.pratica.crsseq.model.dto;
+package io.elasticsearch.pratica.content.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDateTime;
 
-public class CrsseqDTO {
+public class ContentDTO {
     @Getter
     @Setter
     public static class Item {

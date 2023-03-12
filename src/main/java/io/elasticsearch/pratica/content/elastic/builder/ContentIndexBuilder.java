@@ -1,11 +1,11 @@
-package io.elasticsearch.pratica.crsseq.elastic.builder;
+package io.elasticsearch.pratica.content.elastic.builder;
 
 import org.elasticsearch.xcontent.XContentBuilder;
 import org.elasticsearch.xcontent.XContentFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CrsseqIndexBuilder {
+public class ContentIndexBuilder {
     public XContentBuilder getMappingBuilder() throws Exception {
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
