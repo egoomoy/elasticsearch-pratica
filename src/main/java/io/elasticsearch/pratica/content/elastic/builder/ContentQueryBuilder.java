@@ -46,6 +46,10 @@ public class ContentQueryBuilder implements QueryBuilderInterface<ContentDTO.Req
 
     private void setFilters(ContentDTO.Req req) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.minimumShouldMatch(1); // filter가 제대로 동작하기 위해서
+        // should 외에 조합할 경우 default(1) 에서 (0)으로 변경되기 떄문에 should 조건이 무시됨
+        //https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-minimum-should-match.html
+
         if (req.getKeywords() != null && !req.getKeywords().isEmpty()) {
             boolQueryBuilder.should(KeywordsMatchFilter.createFilter(req));
             boolQueryBuilder.should(KeywordsTermFilter.createFilter(req));
