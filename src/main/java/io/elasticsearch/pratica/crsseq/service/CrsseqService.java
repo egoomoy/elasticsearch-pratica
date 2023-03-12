@@ -9,5 +9,5 @@ import org.springframework.data.elasticsearch.core.SearchPage;
 public interface CrsseqService {
     public boolean rollingCrsseqIndex() throws Exception;
     public Crsseq saveCrsseq(CrsseqDTO.Req reqCrsseq) throws Exception;
-    public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.SearchReq reqCrsseq) throws Exception;
+    public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.Req reqCrsseq) throws Exception;
 }

@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.stereotype.Component;
 
 @Component
-public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.SearchReq> {
+public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Req> {
     private NativeSearchQueryBuilder searchQueryBuilder;
     private PageRequest pageRequest;
 
@@ -22,7 +22,7 @@ public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Searc
     }
 
     @Override
-    public void createQuery(CrsseqDTO.SearchReq req) {
+    public void createQuery(CrsseqDTO.Req req) {
         this.setPageOffset(req);
         this.setFilters(req);
         this.setAggregation(req);
@@ -35,28 +35,28 @@ public class CrsseqQueryBuilder implements QueryBuilderInterface<CrsseqDTO.Searc
         return this.searchQueryBuilder.build();
     }
 
-    private void setFields(CrsseqDTO.SearchReq req) {
+    private void setFields(CrsseqDTO.Req req) {
     }
 
-    private void setSorting(CrsseqDTO.SearchReq req) {
+    private void setSorting(CrsseqDTO.Req req) {
     }
 
-    private void setAggregation(CrsseqDTO.SearchReq req) {
+    private void setAggregation(CrsseqDTO.Req req) {
     }
 
-    private void setFilters(CrsseqDTO.SearchReq req) {
+    private void setFilters(CrsseqDTO.Req req) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        if (!req.getKeywords().isEmpty()) {
+        if (req.getKeywords() != null && !req.getKeywords().isEmpty()) {
             boolQueryBuilder.should(KeywordsMatchFilter.createFilter(req));
             boolQueryBuilder.should(KeywordsTermFilter.createFilter(req));
         }
-        if (!req.getEduType().isEmpty()) {
+        if (req.getEduType() != null && !req.getEduType().isEmpty()) {
             boolQueryBuilder.filter(EduTypeFilter.createFilter(req));
         }
         this.searchQueryBuilder.withQuery(boolQueryBuilder);
     }
 
-    private void setPageOffset(CrsseqDTO.SearchReq req) {
+    private void setPageOffset(CrsseqDTO.Req req) {
         this.pageRequest = PageRequest.of(req.getPageNumber(), req.getPageSize());
         this.searchQueryBuilder.withPageable(this.pageRequest);
     }

@@ -9,10 +9,7 @@ import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchPage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
 
@@ -30,16 +27,20 @@ public class CrsseqController {
 
     @PostMapping("/crsseq")
     public ResponseEntity saveCrsseq(@RequestBody CrsseqDTO.Req reqCrsseq) throws Exception {
-        Crsseq crsseq = crsseqService.saveCrsseq(reqCrsseq);
+        Crsseq crsseqItem = crsseqService.saveCrsseq(reqCrsseq);
         CrsseqDTO.Res resCrsseq = CrsseqDTO.Res.builder()
-                .id(crsseq.getId())
-                .title(crsseq.getTitle())
-                .tags(crsseq.getTags()).build();
+                .id(crsseqItem.getId())
+                .title(crsseqItem.getTitle())
+                .tags(crsseqItem.getTags())
+                .eduType(crsseqItem.getEduType())
+                .crsregEnddt(crsseqItem.getCrsregEnddt())
+                .crsregStrtdt(crsseqItem.getCrsregStrtdt())
+                .build();
         return new ResponseEntity(resCrsseq, HttpStatus.OK);
     }
 
     @GetMapping(value = "/crsseq")
-    public ResponseEntity getCrsseq(CrsseqDTO.SearchReq reqCrsseq) throws Exception {
+    public ResponseEntity getCrsseq( CrsseqDTO.Req reqCrsseq) throws Exception {
         SearchPage<CrsseqDocument> crsseqDocs = crsseqService.getCrsseq(reqCrsseq);
 
         Iterator<SearchHit<CrsseqDocument>> iterator = crsseqDocs.iterator();

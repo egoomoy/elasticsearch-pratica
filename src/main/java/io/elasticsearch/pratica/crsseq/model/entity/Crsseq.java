@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -26,15 +27,13 @@ public class Crsseq {
     private String tags;
     @Column
     private String eduType;
-    @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private Date crsregStrtdt;
-    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime crsregStrtdt;
     @Column
-    private Date crsregEnddt;
+    private LocalDateTime crsregEnddt;
 
     @Builder
-    public Crsseq(String title, String tags, String eduType, Date crsregStrtdt, Date crsregEnddt) {
+    public Crsseq(String title, String tags, String eduType, LocalDateTime crsregStrtdt, LocalDateTime crsregEnddt) {
         this.title = title;
         this.tags = tags;
         this.eduType = eduType;

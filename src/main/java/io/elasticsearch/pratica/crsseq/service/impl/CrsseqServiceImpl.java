@@ -1,5 +1,6 @@
 package io.elasticsearch.pratica.crsseq.service.impl;
 
+import io.elasticsearch.pratica.common.util.ModelMapperUtil;
 import io.elasticsearch.pratica.crsseq.elastic.builder.CrsseqIndexBuilder;
 import io.elasticsearch.pratica.crsseq.elastic.builder.CrsseqQueryBuilder;
 import io.elasticsearch.pratica.crsseq.elastic.document.CrsseqDocument;
@@ -34,7 +35,6 @@ public class CrsseqServiceImpl implements CrsseqService {
     private final CrsseqIndexBuilder crsseqIndexBuilder;
     private final CrsseqRespository crsseqRespository;
     private final CrsseqElasticsearchRepository crsseqElasticsearchRepository;
-    private final ModelMapper modelMapper;
     private final CrsseqQueryBuilder crsseqQueryBuilder;
     private final ElasticsearchOperations operations;
 
@@ -67,13 +67,13 @@ public class CrsseqServiceImpl implements CrsseqService {
         // save를 까보면 결국 doc 이름을 Coordinate하게되는데, 수정없이 사용하면 alias처리가 안됨
         List<IndexQuery> indexQueries = crsseqList.stream()
                 .map(seq -> {
-                    CrsseqDocument crsseqDocument = modelMapper.map(seq, CrsseqDocument.class);
+                    CrsseqDocument crsseqDocument =  ModelMapperUtil.map(seq, CrsseqDocument.class);
                     IndexQuery indexQuery = new IndexQuery();
                     indexQuery.setObject(crsseqDocument);
                     return indexQuery;
                 })
                 .collect(Collectors.toList());
-        crsseqList.stream().map(seq -> modelMapper.map(seq, CrsseqDocument.class));
+        crsseqList.stream().map(seq -> ModelMapperUtil.map(seq, CrsseqDocument.class));
         operations.bulkIndex(indexQueries, indexNameWrapper);
 
         // 6. 2번에서 조회된 index를 일괄 삭제한다. 필요에 따라 해당기능만 발라서 배치처리
@@ -90,13 +90,13 @@ public class CrsseqServiceImpl implements CrsseqService {
     public Crsseq saveCrsseq(CrsseqDTO.Req reqCrsseq) throws Exception {
         // 1. JPA를 통한 업데이트 필요
         // 1-1. API로 호출될 경우 별도 db로 저장하지 않아도 되는 점
-        Crsseq crsseq = modelMapper.map(reqCrsseq, Crsseq.class);
+        Crsseq crsseq =  ModelMapperUtil.map(reqCrsseq, Crsseq.class);
         crsseqRespository.save(crsseq);
 
         // 2. el DOC에 추가
         // TODO: 인덱스 롤링일 때는 부분 색인을 진행하지 않도록 조치할 것 + JPA와 비즈니스가 같이 있는게 안정성 측면에서 문제되지 않나?
         // 물론 MSA라고 가정하면 분리된 트랜잭션이라서 문제 없을 것 같다.
-        CrsseqDocument crsseqDocument = modelMapper.map(reqCrsseq, CrsseqDocument.class);
+        CrsseqDocument crsseqDocument = ModelMapperUtil.map(crsseq, CrsseqDocument.class);
         IndexCoordinates aliasNameWrapper = IndexCoordinates.of(ALIAS_NAME);
         crsseqElasticsearchRepository.save(crsseqDocument, aliasNameWrapper);
 
@@ -105,7 +105,7 @@ public class CrsseqServiceImpl implements CrsseqService {
 
     @Override
     @Transactional
-    public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.SearchReq reqCrsseq) throws Exception {
+    public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.Req reqCrsseq) throws Exception {
         crsseqQueryBuilder.createQuery(reqCrsseq);
         NativeSearchQuery searchQuery = crsseqQueryBuilder.getSearch();
         SearchHits<CrsseqDocument>  searchHits = operations.search(searchQuery,CrsseqDocument.class);

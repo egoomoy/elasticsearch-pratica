@@ -1,6 +1,7 @@
 package io.elasticsearch.pratica.common.util;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.MatchingStrategies;
 
 import java.util.Collection;
@@ -18,7 +19,10 @@ public class ModelMapperUtil {
      */
     static {
         modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        modelMapper.getConfiguration()
+                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
+                .setFieldMatchingEnabled(true)
+                .setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
     /**

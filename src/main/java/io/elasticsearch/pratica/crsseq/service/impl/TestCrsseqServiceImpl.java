@@ -21,7 +21,7 @@ public class TestCrsseqServiceImpl implements CrsseqService {
     }
 
     @Override
-    public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.SearchReq reqCrsseq) throws Exception {
+    public SearchPage<CrsseqDocument> getCrsseq(CrsseqDTO.Req reqCrsseq) throws Exception {
         return null;
     }
 }

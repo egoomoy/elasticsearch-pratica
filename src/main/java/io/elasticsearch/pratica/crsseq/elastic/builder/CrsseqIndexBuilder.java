@@ -45,14 +45,14 @@ public class CrsseqIndexBuilder {
                 builder.startObject("crsregStrtdt");
                 {
                     builder.field("type", "date");
-                    builder.field("format", "yyyy-MM-dd HH:mm:ss");
+                    builder.field("format", "uuuu-MM-dd'T'HH:mm:ss");
                 }
                 builder.endObject();
 
                 builder.startObject("crsregEnddt");
                 {
                     builder.field("type", "date");
-                    builder.field("format", "yyyy-MM-dd HH:mm:ss");
+                    builder.field("format", "uuuu-MM-dd'T'HH:mm:ss");
                 }
                 builder.endObject();
 
